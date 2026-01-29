@@ -5,17 +5,11 @@ const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
-  const addGoodFeedback = () => {
-    setGood(good + 1);
-  };
+  const addGoodFeedback = () => setGood(good + 1);
 
-  const addNeutralFeedback = () => {
-    setNeutral(neutral + 1);
-  };
+  const addNeutralFeedback = () => setNeutral(neutral + 1);
 
-  const addBadFeedback = () => {
-    setBad(bad + 1);
-  };
+  const addBadFeedback = () => setBad(bad + 1);
 
   const all = good + neutral + bad;
   const totScore = good - bad;
@@ -33,17 +27,19 @@ const App = () => {
       {all === 0 ? (
         <div>No feedback given</div>
       ) : (
-        <>
-          <StatisticLine text="Good" rating={good} />
-          <StatisticLine text="Neutral" rating={neutral} />
-          <StatisticLine text="Bad" rating={bad} />
-          <StatisticLine text="All" rating={all} />
-          <StatisticLine text="Average" rating={average.toFixed(2)} />
-          <StatisticLine
-            text="Positive Feedback"
-            rating={`${positive.toFixed(1)}%`}
-          />
-        </>
+        <table>
+          <tbody>
+            <StatisticLine text="Good" rating={good} />
+            <StatisticLine text="Neutral" rating={neutral} />
+            <StatisticLine text="Bad" rating={bad} />
+            <StatisticLine text="All" rating={all} />
+            <StatisticLine text="Average" rating={average.toFixed(2)} />
+            <StatisticLine
+              text="Positive Feedback"
+              rating={`${positive.toFixed(1)}%`}
+            />
+          </tbody>
+        </table>
       )}
     </div>
   );
@@ -55,9 +51,10 @@ const Button = ({ onClick, text }) => {
 
 const StatisticLine = ({ text, rating }) => {
   return (
-    <div>
-      {text}:{rating}
-    </div>
+    <tr>
+      <td>{text}</td>
+      <td>{rating}</td>
+    </tr>
   );
 };
 
