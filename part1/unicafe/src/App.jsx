@@ -30,15 +30,21 @@ const App = () => {
       <Button text="Neutral" onClick={addNeutralFeedback} />
       <Button text="Bad" onClick={addBadFeedback} />
       <h1>Statistics</h1>
-      <Statistic text="Good" rating={good === 0 ? "No feedback given" : good} />
-      <Statistic
-        text="Neutral"
-        rating={neutral === 0 ? "No feedback given" : neutral}
-      />
-      <Statistic text="Bad" rating={bad === 0 ? "No feedback given" : bad} />
-      <Statistic text="All" rating={all === 0 ? "No feedback given" : all} />
-      <Statistic text="Average" rating={average.toFixed(2)} />
-      <Statistic text="Positive Feedback" rating={`${positive.toFixed(1)}%`} />
+      {all === 0 ? (
+        <div>No feedback given</div>
+      ) : (
+        <>
+          <StatisticLine text="Good" rating={good} />
+          <StatisticLine text="Neutral" rating={neutral} />
+          <StatisticLine text="Bad" rating={bad} />
+          <StatisticLine text="All" rating={all} />
+          <StatisticLine text="Average" rating={average.toFixed(2)} />
+          <StatisticLine
+            text="Positive Feedback"
+            rating={`${positive.toFixed(1)}%`}
+          />
+        </>
+      )}
     </div>
   );
 };
@@ -47,7 +53,7 @@ const Button = ({ onClick, text }) => {
   return <button onClick={onClick}>{text}</button>;
 };
 
-const Statistic = ({ text, rating }) => {
+const StatisticLine = ({ text, rating }) => {
   return (
     <div>
       {text}:{rating}
