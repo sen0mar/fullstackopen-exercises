@@ -25,12 +25,25 @@ function App() {
     setVotes(copy);
   }
 
+  function displayHighestRated() {
+    let max_index = 0;
+    for (let i = 1; i < votes.length; i++) {
+      if (votes[i] > votes[max_index]) {
+        max_index = i;
+      }
+    }
+    return max_index;
+  }
+
   return (
     <div>
+      <h1>Anecdote Of the day</h1>
       <p>{anecdotes[selected]}</p>
       <p>{votes[selected]} votes</p>
       <Button onClick={increaseVote} text="Vote" />
       <Button onClick={displayRandom} text="Next anecdote" />
+      <h1>Anecdote with the most votes</h1>
+      <p>{anecdotes[displayHighestRated()]}</p>
     </div>
   );
 }
