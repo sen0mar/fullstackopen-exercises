@@ -1,8 +1,6 @@
 import { useState } from "react";
 
 function App() {
-  const [selected, setSelected] = useState(0);
-
   const anecdotes = [
     "If it hurts, do it more often.",
     "Adding manpower to a late software project makes it later!",
@@ -14,12 +12,24 @@ function App() {
     "The only way to go fast, is to go well.",
   ];
 
+  const [selected, setSelected] = useState(0); // State for indexing the anecdotes array
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0)); // Create an array of length 8 filled with 0s
+
   function displayRandom() {
     setSelected(Math.floor(Math.random() * anecdotes.length));
   }
+
+  function increaseVote() {
+    const copy = [...votes];
+    copy[selected] += 1;
+    setVotes(copy);
+  }
+
   return (
     <div>
       <p>{anecdotes[selected]}</p>
+      <p>{votes[selected]} votes</p>
+      <Button onClick={increaseVote} text="Vote" />
       <Button onClick={displayRandom} text="Next anecdote" />
     </div>
   );
