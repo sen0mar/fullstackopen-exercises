@@ -1,5 +1,6 @@
 export default function Course({ course }) {
-  console.log(course);
+  const sum = course.parts.reduce((acc, curr) => acc + curr.exercises, 0);
+  console.log(sum);
   return (
     <div>
       <h1>{course.name}</h1>
@@ -10,6 +11,9 @@ export default function Course({ course }) {
           </p>
         ))}
       </div>
+      <p>
+        <strong>{`Total of ${sum} exercises`}</strong>
+      </p>
     </div>
   );
 }
