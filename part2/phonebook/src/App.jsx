@@ -11,6 +11,13 @@ const App = () => {
   const addName = (e) => {
     e.preventDefault();
 
+    const nameExists = persons.some((person) => person.name === newName); // Checks if new name already exists in PhoneBook
+
+    if (nameExists) {
+      alert(`${newName} is already added to PhoneBook`);
+      return;
+    }
+
     const newPerson = {
       name: newName,
     };
