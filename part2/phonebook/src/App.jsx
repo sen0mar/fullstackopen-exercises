@@ -38,18 +38,33 @@ const App = () => {
       return;
     }
 
+    // Creates new person object for non existing person
+    const newPerson = {
+      name: newName,
+      number: newNumber,
+    };
+
     // Checks for an existing person
     const existingPerson = persons.find((p) => p.name === newName);
+    // Creates a new object with the updated number if the person exists
+    const updatedPerson = { ...existingPerson, number: newNumber };
 
+    // If the person exists, ask a confirmation before updating
     if (existingPerson) {
       const ok = window.confirm(
         `${newName} already exists in the PhoneBook, replace the old number with a new one?`,
       );
       if (!ok) return;
     }
-    const updatedPerson = { ...existingPerson, number: newNumber };
 
-    // Checks for existing person and updates phone number in the server
+    // Creates new person in the server
+    personService.createPerson(newPerson).then((returnedPerson) => {
+      setPersons(persons.concat(returnedPerson));
+      setNewName("");
+      setNewNumber("");
+    });
+
+    // Updates phone number in the server after checking if the person exists and asking for confirmation
     personService
       .updatePerson(existingPerson.id, updatedPerson)
       .then((returnedPerson) => {
@@ -59,18 +74,6 @@ const App = () => {
         setNewName("");
         setNewNumber("");
       });
-
-    // Creates new person object
-    const newPerson = {
-      name: newName,
-      number: newNumber,
-    };
-    // Creates new person in the server
-    personService.createPerson(newPerson).then((returnedPerson) => {
-      setPersons(persons.concat(returnedPerson));
-      setNewName("");
-      setNewNumber("");
-    });
   };
 
   // Delete a person
