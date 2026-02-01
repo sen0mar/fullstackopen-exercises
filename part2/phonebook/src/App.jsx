@@ -30,26 +30,42 @@ const App = () => {
     setSearch(e.target.value);
   };
 
-  // Add a new person
+  // Add new person or Update existing one
   const addPerson = (e) => {
     e.preventDefault();
-
-    const nameExists = persons.some((person) => person.name === newName); // Checks if new name already exists in PhoneBook
 
     if (!newName.trim()) {
       return;
     }
 
-    if (nameExists) {
-      alert(`${newName} is already added to PhoneBook`);
-      return;
-    }
+    // Checks for an existing person
+    const existingPerson = persons.find((p) => p.name === newName);
 
+    if (existingPerson) {
+      const ok = window.confirm(
+        `${newName} already exists in the PhoneBook, replace the old number with a new one?`,
+      );
+      if (!ok) return;
+    }
+    const updatedPerson = { ...existingPerson, number: newNumber };
+
+    // Checks for existing person and updates phone number in the server
+    personService
+      .updatePerson(existingPerson.id, updatedPerson)
+      .then((returnedPerson) => {
+        setPersons(
+          persons.map((p) => (p.id === existingPerson.id ? returnedPerson : p)),
+        );
+        setNewName("");
+        setNewNumber("");
+      });
+
+    // Creates new person object
     const newPerson = {
       name: newName,
       number: newNumber,
     };
-
+    // Creates new person in the server
     personService.createPerson(newPerson).then((returnedPerson) => {
       setPersons(persons.concat(returnedPerson));
       setNewName("");
