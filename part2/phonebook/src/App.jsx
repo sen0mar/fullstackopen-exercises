@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import personServer from "./service/personServer";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
 import Persons from "./components/Persons";
@@ -11,9 +11,8 @@ const App = () => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      console.log(response);
-      setPersons(response.data);
+    personServer.getAll().then((personsList) => {
+      setPersons(personsList);
     });
   }, []);
 
@@ -34,7 +33,7 @@ const App = () => {
 
     const nameExists = persons.some((person) => person.name === newName); // Checks if new name already exists in PhoneBook
 
-    if (!newName) {
+    if (!newName.trim()) {
       return;
     }
 
@@ -46,12 +45,13 @@ const App = () => {
     const newPerson = {
       name: newName,
       number: newNumber,
-      id: persons.length === 0 ? 1 : Math.max(...persons.map((p) => p.id)) + 1,
     };
 
-    setPersons(persons.concat(newPerson));
-    setNewName("");
-    setNewNumber("");
+    personServer.create(newPerson).then((returnedPerson) => {
+      setPersons(persons.concat(returnedPerson));
+      setNewName("");
+      setNewNumber("");
+    });
   };
 
   const filteredPersons =
