@@ -1,21 +1,23 @@
 import { useState, useEffect } from "react";
-import personServer from "./service/personServer";
+import personService from "./service/personService";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
 import Persons from "./components/Persons";
 
 const App = () => {
-  const [persons, setPersons] = useState([]);
+  const [persons, setPersons] = useState([]); // List of users
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
 
+  // Retrieve list of persons from server and display them
   useEffect(() => {
-    personServer.getAll().then((personsList) => {
+    personService.getAll().then((personsList) => {
       setPersons(personsList);
     });
   }, []);
 
+  // Handlers
   const handleName = (e) => {
     setNewName(e.target.value);
   };
@@ -28,6 +30,7 @@ const App = () => {
     setSearch(e.target.value);
   };
 
+  // Add a new person
   const addPerson = (e) => {
     e.preventDefault();
 
@@ -47,13 +50,23 @@ const App = () => {
       number: newNumber,
     };
 
-    personServer.create(newPerson).then((returnedPerson) => {
+    personService.createPerson(newPerson).then((returnedPerson) => {
       setPersons(persons.concat(returnedPerson));
       setNewName("");
       setNewNumber("");
     });
   };
 
+  // Delete a person
+  const deletePerson = (id, name) => {
+    if (window.confirm(`Are you sure you want to delete ${name} ?`)) {
+      personService.deletePerson(id).then(() => {
+        setPersons(persons.filter((p) => p.id !== id));
+      });
+    }
+  };
+
+  // Filter a person
   const filteredPersons =
     search.trim() === ""
       ? persons
@@ -73,7 +86,7 @@ const App = () => {
         addPerson={addPerson}
       />
       <h2>Numbers</h2>
-      <Persons filteredPersons={filteredPersons} />
+      <Persons filteredPersons={filteredPersons} deletePerson={deletePerson} />
     </div>
   );
 };
