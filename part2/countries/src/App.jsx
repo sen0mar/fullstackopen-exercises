@@ -8,6 +8,7 @@ function App() {
   const [countries, setCountries] = useState([]);
   const [search, setSearch] = useState("");
   const [notification, setNotification] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
   // Retrieve countries from server and display them
   useEffect(() => {
@@ -20,17 +21,13 @@ function App() {
   const filteredCountries = countries.filter((country) =>
     country.name.common.toLowerCase().includes(search.toLowerCase()),
   );
-  const count = filteredCountries.length;
 
   // Set notifications
   useEffect(() => {
-    if (search === "") {
-      setNotification("");
-    } else if (filteredCountries.length > 10) {
+    if (search === "") setNotification("");
+    else if (filteredCountries.length > 10)
       setNotification("Too many matches, specify a more precise filter");
-    } else {
-      setNotification("");
-    }
+    else setNotification("");
   }, [search, filteredCountries]);
 
   return (
@@ -45,7 +42,15 @@ function App() {
         filteredCountries.length <= 10 && (
           <ul>
             {filteredCountries.map((country) => (
-              <li key={country.cca3}>{country.name.common}</li>
+              <div key={country.cca3}>
+                <li>{country.name.common}</li>
+                <button
+                  type="button"
+                  onClick={() => setSelectedCountry(country)}
+                >
+                  Show
+                </button>
+              </div>
             ))}
           </ul>
         )}
