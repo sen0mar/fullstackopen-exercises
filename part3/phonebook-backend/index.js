@@ -83,6 +83,23 @@ const generatedId = () => {
 
 app.post("/api/persons", (req, res) => {
   const body = req.body;
+
+  // Missing name or number
+  if (!body.name || !body.number) {
+    return res.status(400).json({
+      error: "Name or number is missing",
+    });
+  }
+
+  // Already existing name
+  const nameExists = persons.some((person) => person.name === body.name);
+  if (nameExists) {
+    return res.status(400).json({
+      error: "Name already exists",
+    });
+  }
+
+  // If all previous conditions are satisfied, create a new person
   const newPerson = {
     id: generatedId(),
     name: body.name,
