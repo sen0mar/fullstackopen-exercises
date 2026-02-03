@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+app.use(express.json());
 
 // List of users
 let persons = [
@@ -73,6 +74,23 @@ app.delete("/api/persons/:id", (req, res) => {
     res.status(404).end();
     console.log("User was already deleted");
   }
+});
+
+// Add a user
+const generatedId = () => {
+  return Math.floor(Math.random() * 1000000).toString();
+};
+
+app.post("/api/persons", (req, res) => {
+  const body = req.body;
+  const newPerson = {
+    id: generatedId(),
+    name: body.name,
+    number: body.number,
+  };
+
+  persons = persons.concat(newPerson);
+  res.json(newPerson);
 });
 
 // Listen to server requests
