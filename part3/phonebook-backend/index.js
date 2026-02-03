@@ -25,15 +25,17 @@ let persons = [
   },
 ];
 
-// Get requests
+// Get test
 app.get("/", (req, res) => {
   res.send("hello");
 });
 
+// Get list of persons
 app.get("/api/persons", (req, res) => {
   res.json(persons);
 });
 
+// Get information about how many people are in the list, and when was the request made
 app.get("/info", (req, res) => {
   const numOfPeople = persons.length;
   const timeReceived = new Date();
@@ -41,6 +43,36 @@ app.get("/info", (req, res) => {
     <p>Phonebook has info for ${numOfPeople}</p>
     <p>${timeReceived}</p>
     `);
+});
+
+// Fetch single user and display it based on the request
+const selectedUser = (id) => {
+  return persons.find((person) => person.id === id);
+};
+
+app.get("/api/persons/:id", (req, res) => {
+  const id = req.params.id;
+  const person = selectedUser(id);
+  if (person) {
+    res.send(person);
+  } else {
+    res.status(404).end();
+  }
+});
+
+// Delete a user
+app.delete("/api/persons/:id", (req, res) => {
+  const id = req.params.id;
+  const oldLength = persons.length;
+
+  persons = persons.filter((person) => person.id !== id);
+
+  if (persons.length < oldLength) {
+    res.status(204).end();
+  } else {
+    res.status(404).end();
+    console.log("User was already deleted");
+  }
 });
 
 // Listen to server requests
