@@ -85,12 +85,18 @@ const App = () => {
     };
 
     // Creates new person in the server
-    personService.createPerson(newPerson).then((returnedPerson) => {
-      setPersons(persons.concat(returnedPerson));
-      setNewName("");
-      setNewNumber("");
-      showNotification(`Added ${returnedPerson.name}`, "success");
-    });
+    personService
+      .createPerson(newPerson)
+      .then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
+        setNewName("");
+        setNewNumber("");
+        showNotification(`Added ${returnedPerson.name}`, "success");
+      })
+      .catch((error) => {
+        const msg = error.response?.data?.error || "Something went wrong";
+        showNotification(msg, "error");
+      });
   };
 
   // Delete a person
